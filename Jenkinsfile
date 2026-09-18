@@ -50,7 +50,9 @@ pipeline {
                 echo 'Waiting for app to start and verifying health endpoint...'
                 sh '''
                     sleep 10
-                    curl -f http://localhost:${APP_PORT}/students/health
+                    CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${CONTAINER_NAME})
+                    echo "App container IP: $CONTAINER_IP"
+                    curl -f http://$CONTAINER_IP:8080/students/health
                 '''
             }
         }
